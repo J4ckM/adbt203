@@ -10,13 +10,15 @@ class Prey
   float centreY;
   float vx;
   float vy;
+  float ax;
+  float ay;
 
   Prey() {
     on = true;
     centreX = random(preyrad, width - preyrad);
     centreY = random(preyrad, height - preyrad);
     vx = 1.5;
-    vy = 1.5;
+    vy = 2;
   }
 
   // Moves the ball according to its current velocity.
@@ -29,8 +31,33 @@ class Prey
       on = true;
       preytime = 0;
     }
-    if(on){
+    if (on) {
+      //body
       circle(centreX, centreY, preyrad);
+
+      //ears
+      ax = centreX - preyrad/4;
+      ay = centreY - (3 * preyrad)/4;
+      ellipse(ax, ay, preyrad/2, preyrad);
+      ax = centreX + preyrad/4;
+      ellipse(ax, ay, preyrad/2, preyrad);
+
+      //eyes
+      ax = centreX - preyrad/4;
+      ay = centreY - preyrad/4;
+      for (int i = 0; i<2; i++) {
+        fill(255);
+        circle(ax, ay, preyrad/4);
+        fill(0);
+        circle(ax, ay, preyrad/12);
+        ax = centreX + preyrad/4;
+      }
+
+      //nose
+      fill(255, 102, 102);
+      circle(centreX, centreY, preyrad/4);
+
+      //movement
       move();
       bounce();
     }
