@@ -31,7 +31,7 @@ class Apex
 
   boolean contains() {
     float d = dist(centreX, centreY, c.centreX, c.centreY);
-    if (d<(apexrad) && (!a.on)) {
+    if (d<(apexrad) && (a.on)) {
       return true;
     } else {
       return false;
