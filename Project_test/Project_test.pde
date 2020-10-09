@@ -5,6 +5,7 @@ Plant[] plant;
 Apex a;
 int time;
 boolean GameOver;
+boolean Victory;
 String message;
 
 void setup() {
@@ -12,7 +13,7 @@ void setup() {
   background(255);
   time = 0;
   GameOver = false;
-  message = "Game Over";
+  Victory = false;
   textSize(48);
 
   //initialise animals
@@ -21,6 +22,15 @@ void setup() {
 
 void draw() {
   background(255);
+  fill(10, 10, 10);
+  for (int i = 0; i < 4; i++) {
+    circle(width, height, 200 - (50 * i));
+    fill(50*(1+i), 50*(1+i), 50*(1+i));
+  }
+
+  if (points > 10) {
+    a.on = true;
+  }
 
   //if prey eats plant, remove plant
   Plantlife();
@@ -31,27 +41,32 @@ void draw() {
   //if Player is eaten, game over
   Playerlife();
 
+  //if Player is in apex form, they can fight the apex and win
+  Apexlife();
+
   //display
   display();
 
   //time
   time();
 
-  //GameOver
-  float b;
-  if (GameOver) {
-    background(0, 255, 0);
-    b = (width/2 - (textWidth(message)/2));
-    text(message, b, height/2);
+  //GameEnd
+  if (Victory||GameOver) {
+    GameEnd();
   }
 }
 
 void keyPressed() {
   if (key == ' ') {
-    if (c.on) {
-      c.on = false;
-    } else {
-      c.on = true;
+    if (!c.tigform) {
+      if (c.on) {
+        c.on = false;
+      } else {
+        c.on = true;
+      }
+    }
+    if (GameOver||Victory) {
+      Restart();
     }
   }
 }
@@ -90,15 +105,12 @@ void Plantlife() {
         p.on = false;
       }
     }
-  }
-}
-
-void Preylife() {
-  for (Prey p : prey) {
-    for (Predator pr : pred) {
-      if (p.contains(pr.centreX, pr.centreY)) {
+    //if creature is in prey mode, it eats plants
+    if (c.on) {
+      if (p.contains(c.centreX, c.centreY)) {
         if (p.on) {
           plantcount--;
+          points++;
         }
         p.on = false;
       }
@@ -106,10 +118,58 @@ void Preylife() {
   }
 }
 
+void Preylife() {
+  for (Prey p : prey) {
+    if (p.on) {
+      for (Predator pr : pred) {
+        if (p.contains(pr.centreX, pr.centreY)) {
+          preycount--;
+          p.on = false;
+        }
+      }
+      //if creature is in pred mode, it eats prey
+      if (!c.on) {
+        if (p.contains(c.centreX, c.centreY)) {
+          preycount--;
+          points++;
+          p.on = false;
+        }
+      }
+      for (Prey pr : prey) {
+        if (!(pr == p)) {
+          if (p.contains(pr.centreX, pr.centreY)) {
+            for (Prey prey : prey){
+              if (!prey.on){
+                prey.on = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 void Playerlife() {
-  //Apex eats Player
-  if (a.contains()) {
-    GameOver = true;
+  if (!c.tigform) {
+    //Apex eats Player
+    if (a.contains(c.centreX, c.centreY)) {
+      GameOver = true;
+    }
+    for (Predator p : pred) {
+      if (p.contains(c.centreX, c.centreY) && c.on) {
+        GameOver = true;
+      }
+    }
+  }
+}
+
+void Apexlife() {
+  if (c.tigform) {
+    //Player fights Apex
+    if (a.contains(c.centreX, c.centreY)) {
+      Victory = true;
+    }
   }
 }
 
@@ -124,9 +184,6 @@ void display() {
   for (Predator p : pred) {
     p.display();
   }
-  if(a.time == 10){
-    a.on = true;
-  }
   if (a.on) {
     a.display();
   }
@@ -140,7 +197,40 @@ void time() {
     for (Predator p : pred) {
       p.time++;
     }
-    a.time++;
     time=0;
   }
+}
+
+void GameEnd() {
+  background(0, 255, 0);
+  float b;
+  if (GameOver) {
+    message = "Game Over";
+  }
+  if (Victory) {
+    message = "Victory";
+  }
+  b = (width/2 - (textWidth(message)/2));
+  text(message, b, height/2);
+
+  message = "Points:" + points;
+  b = (width/2 - (textWidth(message)/2));
+  text(message, b, (5*height)/8);
+
+  message = "Press space to play again";
+  b = (width/2 - (textWidth(message)/2));
+  text(message, b, (3*height)/4);
+}
+
+void Restart() {
+  GameOver = false;
+  Victory = false;
+  points = 0;
+  for (Plant p : plant) {
+    p.on = true;
+  }
+  for (Prey p : prey) {
+    p.on = true;
+  }
+  a.on = false;
 }
