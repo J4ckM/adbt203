@@ -19,7 +19,7 @@ void setup() {
   GameStart = false;
   GameOver = false;
   Victory = false;
-  seasons = 0;
+  absolutetime = 21;
 
   //initialise animals
   initanimals();
@@ -294,7 +294,7 @@ void display() {
     }
     if (a == 3) {
       t.centreX = width;
-      t.centreY = height/2;
+      t.centreY = height/2;v
     }
     t.display();
     a++;
