@@ -1,8 +1,9 @@
-int ax, ay, bx, by, cx, cy;
-int centerX;
-int centerY;
-int rwidth = 30;
-int rheight = 20;
+float ax, ay, bx, by, cx, cy;
+int centreX;
+int centreY;
+float rwidth = 30;
+float rheight = 20;
+float diam = 20;
 
 //this is a fox
 
@@ -12,17 +13,17 @@ void setup(){
 }
 
 void draw(){
-  centerX = width/2;
-  centerY = height/2;
+  centreX = width/2;
+  centreY = height/2;
   
   //body
   rectMode(CENTER);
   fill(230, 76, 0);
-  rect(centerX, centerY, rwidth, rheight);
+  rect(centreX, centreY, rwidth, rheight);
   
   //tail
-  ax = centerX + rwidth/2;
-  ay = centerY - rheight/2;
+  ax = centreX + rwidth/2;
+  ay = centreY - rheight/2;
   rect(ax,ay,rheight/4,rheight);
   //white tail tip
   fill(255);
@@ -30,9 +31,9 @@ void draw(){
   
   //ear
   fill(0);
-  ax = centerX - (rwidth/2);
+  ax = centreX - (rwidth/2);
   bx = ax + rwidth/3;
-  by = centerY - (rheight/2);
+  by = centreY - (rheight/2);
   ay = by - rheight/2;
   cx = bx + rwidth/12;
   cy = ay - rheight/4;
@@ -40,17 +41,21 @@ void draw(){
   
   //nose
   fill(230, 76, 0);
-  ax = centerX - (rwidth/2);
-  ay = centerY - (rheight/2);  
-  ax = ax - rwidth/4;
-  ay = ay + rheight/4;
+  ax = (centreX - (rwidth/2)) - rwidth/4;
+  ay = (centreY - (rheight/2)) + rheight/4;  
   ellipse(ax,ay,20,10);
   
   //face
   fill(230, 76, 0);
-  ax = centerX - (rwidth/2);
-  ay = centerY - (rheight/2);
-  circle(ax,ay,20);
+  ax = centreX - (rwidth/2);
+  ay = centreY - (rheight/2);
+  circle(ax,ay,diam);
   
-  
+  //eye
+  fill(255);
+  ax = (centreX - (rwidth/2)) - diam/4;
+  ay = (centreY - (rheight/2)) - diam/4;
+  circle(ax,ay,diam/4);
+  fill(0);
+  circle(ax,ay,diam/12);
 }
