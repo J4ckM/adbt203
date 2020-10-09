@@ -6,6 +6,7 @@ Apex a;
 int time;
 boolean GameOver;
 String message;
+String message1;
 
 void setup() {
   size(600, 600);
@@ -13,6 +14,7 @@ void setup() {
   time = 0;
   GameOver = false;
   message = "Game Over";
+  message1 = "Points:" + points;
   textSize(48);
 
   //initialise animals
@@ -43,6 +45,8 @@ void draw() {
     background(0, 255, 0);
     b = (width/2 - (textWidth(message)/2));
     text(message, b, height/2);
+    b = (width/2 - (textWidth(message1)/2));
+    text(message1, b, (5*height)/8);
   }
 }
 
